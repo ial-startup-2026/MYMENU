@@ -110,8 +110,15 @@ nav button.on{background:var(--btn);color:var(--btnx);box-shadow:none}
 .sum{background:color-mix(in srgb,var(--card) 94%,transparent);border-color:var(--bd)}
 #toast{background:var(--btn);color:var(--btnx)}
 .meter i{background:var(--ok)}
+nav:empty{display:none}
+.seg{display:flex;gap:4px;max-width:560px;width:calc(100% - 24px);margin:12px auto 0;padding:4px;background:var(--card);border-radius:999px;box-shadow:0 6px 18px -12px rgb(60 40 20/.35)}
+.seg button{flex:1;min-height:44px;border:0;border-radius:999px;background:transparent;color:var(--tx);font:600 15px Inter,system-ui,sans-serif;cursor:pointer}
+.seg button.on{background:var(--btn);color:var(--btnx)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.stats .card{margin:0}
+.stat b{display:block;font:800 26px/1.1 var(--font-d);font-variant-numeric:lining-nums}.stat span{color:var(--mu);font-size:13px}
 </style></head><body>
 <header><h1>MyMenu</h1><nav id="nav" aria-label="Sezioni"></nav></header>
+<div id="mode" class="seg" role="group" aria-label="Scegli la vista"></div>
 <div class="demo" role="note"><b>Versione dimostrativa.</b> I dati restano solo su questo dispositivo: l'ordine fatto dal cliente non arriva agli altri dispositivi (tablet, cucina, cameriere).</div>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
 <script>
@@ -132,6 +139,9 @@ let S=DEF();try{const r=localStorage.getItem("tf1");if(r)S=JSON.parse(r)}catch(e
 S.nid=S.nid||100;S.menu=S.menu||JSON.parse(MENU_DEF);MENU.length=0;MENU.push(...S.menu);S.menu=MENU;
 const save=()=>{try{localStorage.setItem("tf1",JSON.stringify(S))}catch(e){}};
 let V="sala",T=1,CT=1,C={sala:{},cliente:{}};
+let MODE="gestore";try{const q=new URLSearchParams(location.search).get("vista"),r=localStorage.getItem("tf1v");MODE=q=="cliente"||q=="gestore"?q:r=="cliente"?"cliente":"gestore"}catch(e){}
+V=MODE=="cliente"?"cliente":"ordini";
+function setMode(m){MODE=m;V=m=="cliente"?"cliente":"ordini";try{localStorage.setItem("tf1v",m)}catch(e){}render()}
 const NT=8,ST={attesa:"In attesa di conferma",nuovo:"In coda in cucina",cooking:"In preparazione",ready:"Pronto da servire",served:"Servito"};
 function toast(t){const e=document.getElementById("toast");e.textContent=t;e.className="on";setTimeout(()=>e.className="",2200)}
 const items=k=>Object.entries(C[k]).filter(x=>x[1]>0).map(x=>[+x[0],x[1]]);
@@ -174,7 +184,7 @@ function vCantina(){
  return`<h2>Magazzino bevande e cantina</h2>`+(low.length?`<div class="card"><span class="pill r">⚠ Da riordinare</span><p>${low.map(m=>esc(m.n)+" ("+S.stock[m.id]+")").join(" · ")}</p></div>`:"")+`<div class="card">`+MENU.filter(m=>m.s&&!m.h).map(m=>{const s=S.stock[m.id];return`<div class="row">${ph(m)}<div class="nm" style="flex:1">${esc(m.n)}<small>${s} pz · soglia minima ${MIN[m.id]}</small><div class="meter"><i class="${s<=MIN[m.id]?"low":""}" style="width:${Math.min(100,s/MAX[m.id]*100)}%"></i></div></div><div class="qty"><button aria-label="Scarica una unità di ${esc(m.n)}" onclick="stk(${m.id},-1)">−</button><button aria-label="Carica 6 unità di ${esc(m.n)}" onclick="stk(${m.id},6)">+6</button></div></div>`}).join("")+`</div><p class="note">Le scorte si scalano da sole a ogni ordine confermato. Con “+6” registri un carico di merce.</p>`}
 function vCliente(){
  const os=S.orders.filter(o=>o.tb==CT&&o.src=="cliente");
- return`<h2>Menu digitale – Tavolo <select onchange="CT=+this.value;render()" style="font:inherit;padding:4px">${Array.from({length:NT},(_,i)=>`<option ${i+1==CT?"selected":""}>${i+1}</option>`).join("")}</select></h2><p class="note">Simulazione di ciò che il cliente vede scansionando il QR code sul tavolo.</p>`+
+ return`<h2>Menu digitale – Tavolo <select onchange="CT=+this.value;render()" style="font:inherit;padding:4px">${Array.from({length:NT},(_,i)=>`<option ${i+1==CT?"selected":""}>${i+1}</option>`).join("")}</select></h2><p class="note">Scegli il tuo tavolo, aggiungi i piatti e invia l'ordine: il cameriere lo confermerà prima che parta in cucina.</p>`+
  os.map(o=>`<div class="card"><span class="pill ${o.st=="ready"||o.st=="served"?"k":"w"}">${ST[o.st]}${o.st=="nuovo"||o.st=="cooking"?" · ~"+Math.max(1,o.eta-mins(o.t))+" min":""}</span><p>${lines(o)}</p></div>`).join("")+menuHTML("cliente")+sumHTML("cliente",CT)}
 function tg(id,f){const m=M(id);m[f]=m[f]?0:1;if(m[f])for(const k in C)delete C[k][id];save();render()}
 function addDish(){const g=i=>document.getElementById(i).value,n=g("fn").trim(),c=g("fc"),p=parseFloat(g("fp").replace(",",".")),s=c=="Bevande"||c=="Vini";if(!n||!(p>=0))return toast("Inserisci nome e prezzo");const id=S.nid++,m={id,n,c,p,t:s?0:(parseInt(g("ft"))||5),sz:g("fz")=="1"?1:0};if(s){m.s=1;S.stock[id]=Math.max(0,parseInt(g("fq"))||0)}MENU.push(m);save();toast("Aggiunto: "+n);render()}
@@ -182,8 +192,22 @@ function vMenu(){
  const row=m=>`<div class="row">${ph(m)}<div class="nm">${esc(m.n)}${m.sz?' <span class="pill k">stagione</span>':""}<small>${eur(m.p)} · ${m.s?"cantina: "+S.stock[m.id]:m.t+" min"}${m.off?" · finito oggi":""}</small></div><div class="acts">${m.h?`<button class="bt s" onclick="tg(${m.id},'h')">Rimetti in menu</button>`:`<button class="bt s ${m.off?"g":"o"}" onclick="tg(${m.id},'off')">${m.off?"Riattiva":"Finito"}</button><button class="bt s o" onclick="tg(${m.id},'h')">Togli</button>`}</div></div>`;
  const hid=MENU.filter(m=>m.h);
  return`<h2>Gestione menu</h2><p class="note">Sala e cucina decidono qui cosa è in carta. <b>Finito</b> blocca subito gli ordini (anche quelli dei clienti) fino alla riattivazione; <b>Togli</b> nasconde il piatto dal menu, ad esempio a fine stagione, senza perdere lo storico.</p><h3>Aggiungi un piatto o un vino</h3><div class="card f"><input id="fn" aria-label="Nome" placeholder="Nome del piatto o del vino" autocomplete="off"><div class="f3"><select id="fc" aria-label="Categoria">${CATS.map(c=>`<option>${c}</option>`).join("")}</select><select id="fz" aria-label="Stagionalità"><option value="0">Sempre in menu</option><option value="1">Piatto di stagione</option></select></div><div class="f3"><input id="fp" aria-label="Prezzo" inputmode="decimal" placeholder="Prezzo €"><input id="ft" aria-label="Minuti in cucina" inputmode="numeric" placeholder="Minuti in cucina"><input id="fq" aria-label="Scorta" inputmode="numeric" placeholder="Scorta (bevande, vini)"></div><button class="bt" onclick="addDish()">Aggiungi al menu</button></div>`+CATS.map(c=>{const l=MENU.filter(m=>m.c==c&&!m.h);return l.length?`<h3>${c}</h3><div class="card">${l.map(row).join("")}</div>`:""}).join("")+(hid.length?`<h3>Fuori menu</h3><div class="card">${hid.map(row).join("")}</div>`:"")}
-function render(){const y=scrollY;
- document.getElementById("nav").innerHTML=[["sala","🍽 Sala"],["cucina","👨‍🍳 Cucina"],["cantina","🍾 Cantina"],["cliente","📱 Cliente"],["menu","📋 Menu"]].map(([k,t])=>`<button class="${V==k?"on":""}" onclick="V='${k}';render()" ${V==k?'aria-current="page"':""}>${t}</button>`).join("");
- document.getElementById("app").innerHTML={sala:vSala,cucina:vCucina,cantina:vCantina,cliente:vCliente,menu:vMenu}[V]()+`<p class="note"><b>Versione dimostrativa:</b> i dati restano su questo dispositivo. <a href="#" onclick="S=DEF();MENU.length=0;MENU.push(...S.menu);S.menu=MENU;save();C={sala:{},cliente:{}};render();return false" style="color:var(--ac)">Azzera demo</a></p>`;scrollTo(0,y)}
-render();setInterval(()=>{if(V=="cucina"||V=="cliente"||V=="sala")render()},30000);
+function vOrdini(){
+ const os=S.orders.slice().sort((a,b)=>b.t-a.t),by=f=>os.filter(o=>f.includes(o.st)),
+ card=(o,btn)=>`<div class="card"><div class="bar"><b>Tavolo ${o.tb} · ordine n. ${o.id}</b><span class="pill ${o.src=="cliente"?"r":"w"}">${o.src=="cliente"?"📱 dal cliente":"dal cameriere"}</span></div><p>${lines(o)}</p><div class="bar"><span><b>${eur(tot(o.items))}</b> · ${mins(o.t)} min fa · <span class="pill ${o.st=="ready"||o.st=="served"?"k":"w"}">${ST[o.st]}</span></span>${btn||""}</div></div>`,
+ sec=(t,l,btn)=>l.length?`<h3>${t} (${l.length})</h3>`+l.map(o=>card(o,btn&&btn(o))).join(""):"",
+ conf2=o=>`<span class="acts"><button class="bt s g" onclick="conf(${o.id})">Conferma</button><button class="bt s o" onclick="rej(${o.id})">Rifiuta</button></span>`,
+ serv=o=>`<span class="acts"><button class="bt s g" onclick="adv(${o.id})">Servito ✓</button></span>`,
+ tabs=[...new Set(os.filter(o=>o.st!="attesa").map(o=>o.tb))].sort((a,b)=>a-b),
+ stat=(n,t)=>`<div class="card stat"><b>${n}</b><span>${t}</span></div>`;
+ return`<h2>Ordini</h2><div class="stats">${stat(by(["attesa"]).length,"da confermare")}${stat(by(["nuovo","cooking"]).length,"in cucina")}${stat(by(["ready"]).length,"da servire")}${stat(eur(os.filter(o=>o.st!="attesa").reduce((a,o)=>a+tot(o.items),0)),"totale ordini aperti")}</div>`+
+ (os.length?"":`<p class="note">Nessun ordine al momento. Quando un cliente ordina dalla vista cliente, l'ordine compare qui da confermare.</p>`)+
+ sec("Da confermare",by(["attesa"]),conf2)+sec("In cucina",by(["nuovo","cooking"]))+sec("Pronti da servire",by(["ready"]),serv)+sec("Serviti",by(["served"]))+
+ (tabs.length?`<h3>Conto per tavolo</h3><div class="card">${tabs.map(n=>`<div class="row"><span class="nm">Tavolo ${n}</span><b>${eur(os.filter(o=>o.tb==n&&o.st!="attesa").reduce((a,o)=>a+tot(o.items),0))}</b></div>`).join("")}</div>`:"")}
+function render(){const y=scrollY,cl=MODE=="cliente";
+ if(cl)V="cliente";else if(V=="cliente")V="ordini";
+ document.getElementById("mode").innerHTML=[["gestore","🧑‍🍳 Vista gestore"],["cliente","📱 Vista cliente"]].map(([k,t])=>`<button class="${MODE==k?"on":""}" onclick="setMode('${k}')" aria-pressed="${MODE==k}">${t}</button>`).join("");
+ document.getElementById("nav").innerHTML=cl?"":[["ordini","🧾 Ordini"],["sala","🍽 Sala"],["cucina","👨‍🍳 Cucina"],["cantina","🍾 Cantina"],["menu","📋 Menu"]].map(([k,t])=>`<button class="${V==k?"on":""}" onclick="V='${k}';render()" ${V==k?'aria-current="page"':""}>${t}</button>`).join("");
+ document.getElementById("app").innerHTML={ordini:vOrdini,sala:vSala,cucina:vCucina,cantina:vCantina,cliente:vCliente,menu:vMenu}[V]()+`<p class="note"><b>Versione dimostrativa:</b> i dati restano su questo dispositivo.${cl?"":` <a href="#" onclick="S=DEF();MENU.length=0;MENU.push(...S.menu);S.menu=MENU;save();C={sala:{},cliente:{}};render();return false" style="color:var(--ac)">Azzera demo</a>`}</p>`;scrollTo(0,y)}
+render();setInterval(()=>{if(V=="ordini"||V=="cucina"||V=="cliente"||V=="sala")render()},30000);
 </script></body></html>

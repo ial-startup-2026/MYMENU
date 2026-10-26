@@ -10,10 +10,11 @@ Nessuna dipendenza e nessuna fase di build: è un unico file `index.html` (HTML,
 
 | Scheda | Cosa fa |
 |---|---|
+| **Ordini** | Solo nella *vista gestore*: tutti gli ordini aperti divisi per stato (da confermare, in cucina, da servire, serviti), con conferma o rifiuto degli ordini dei clienti e il conto per tavolo. |
 | **Sala** | Mappa dei tavoli con stato (libero, occupato, da servire), comande con + e −, conto parziale, conferma degli ordini arrivati dai clienti. |
 | **Cucina** | Comande in colonne (Nuove, In preparazione) con tempo trascorso e stimato, numero di cuochi regolabile. |
 | **Cantina** | Giacenze di bevande e vini scalate in automatico a ogni ordine confermato, soglie minime, avviso "Da riordinare", carico merce. |
-| **Cliente** | Menu digitale da QR code sul tavolo: il cliente ordina da solo e vede lo stato e l'attesa stimata. L'ordine parte solo dopo la conferma del cameriere. |
+| **Vista cliente** | Si sceglie con il selettore in alto (*Vista gestore* / *Vista cliente*; si può aprire direttamente con `?vista=cliente`). Menu digitale da QR code sul tavolo: il cliente ordina da solo e vede lo stato e l'attesa stimata. L'ordine parte solo dopo la conferma del cameriere. |
 | **Menu** | Aggiunta di piatti e vini, "Finito oggi" (blocca gli ordini), "Togli dal menu" (fine stagione), etichetta "stagione". |
 
 **Tempo di attesa:** minuti di preparazione già in coda, divisi per i cuochi attivi, più il tempo del nuovo piatto.
