@@ -9,7 +9,7 @@
 <meta property="og:title" content="MyMenu – Gestione ristorante">
 <meta property="og:description" content="Sala, cucina, cantina e menu digitale da QR code in un'unica app per tablet e telefono. Versione dimostrativa.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237b1e30'/%3E%3Ctext x='32' y='47' font-size='40' text-anchor='middle' font-family='Georgia,serif' font-weight='700' fill='%23d8b878'%3EM%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f3ee;--card:#fff;--tx:#1f1b16;--mu:#7a7165;--ac:#b4462b;--acx:#fff;--ok:#2f7d4f;--wa:#c98a12;--bd:#e4ddd2;--mu:#675e52;--wa:#8a5d00;--r1:10px;--r2:14px;--s2:8px;--s3:12px;--font-d:Georgia,"Times New Roman",serif;--shadow:0 -4px 14px rgb(0 0 0/.12);--focus:0 0 0 3px color-mix(in srgb,var(--ac) 45%,transparent)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#181512;--card:#242019;--tx:#f1ebe2;--mu:#a1978a;--ac:#e0683f;--acx:#1a0e08;--ok:#52b378;--wa:#e0aa3a;--bd:#38322a}}
@@ -81,12 +81,42 @@ h3{color:var(--gold);font-weight:600;letter-spacing:.18em;display:flex;align-ite
 .acts{display:flex;gap:8px;flex:none}.f{display:grid;gap:10px}.f3{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 input,select{font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--bd);border-radius:12px;padding:12px;width:100%;min-height:44px}h2 select{width:auto}
 @media(max-width:480px){nav button{font-size:13px;padding:11px 2px}}
+/* stile "ricettario": fondo crema, titoli serif maiuscoli con barretta arancio, card morbide, bottoni scuri */
+:root{--bg:#efebe4;--card:#faf8f4;--tx:#2b2724;--mu:#6f675c;--ac:#a8481a;--acx:#fff;--gold:#e8833a;--bd:#e4ded3;--btn:#1f1b18;--btnx:#fff;--font-d:"Playfair Display",Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171412;--card:#221d1a;--tx:#f3ece3;--mu:#b0a493;--ac:#f0a263;--acx:#1a120a;--gold:#f0a263;--bd:#352d26;--btn:#f3ece3;--btnx:#1a1410}}
+body{background:radial-gradient(900px 360px at 50% -160px,color-mix(in srgb,var(--gold) 12%,transparent),transparent),var(--bg)}
+header{background:color-mix(in srgb,var(--bg) 82%,transparent);border-bottom:0}
+h1{font:800 24px var(--font-d);letter-spacing:.1em;text-transform:uppercase;color:var(--tx);font-variant-numeric:lining-nums}
+h1::after{content:"";display:block;width:32px;height:3px;border-radius:2px;background:var(--gold);margin:6px auto 0}
+h2{font:800 21px/1.2 var(--font-d);letter-spacing:.03em;text-transform:uppercase;padding-left:12px;border-left:3px solid var(--gold);font-variant-numeric:lining-nums}
+h3{color:var(--mu);font-weight:600;letter-spacing:.14em}
+nav{background:var(--card);border-color:transparent;box-shadow:0 6px 18px -12px rgb(60 40 20/.35)}
+nav button.on{background:var(--btn);color:var(--btnx);box-shadow:none}
+.card{background:var(--card);border:0;border-radius:22px;box-shadow:0 10px 26px -16px rgb(60 40 20/.35),0 1px 2px rgb(60 40 20/.06)}
+.row{border-bottom:1px solid color-mix(in srgb,var(--bd) 70%,transparent)}
+.row .nm{flex:1;min-width:0}
+.ph{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-size:26px;background:#fff;box-shadow:0 5px 12px -6px rgb(60 40 20/.45),inset 0 0 0 5px color-mix(in srgb,var(--bd) 75%,#fff)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ph{background:#2c2520;box-shadow:0 5px 12px -6px rgb(0 0 0/.6),inset 0 0 0 5px var(--bd)}}
+@media(max-width:480px){.ph{width:44px;height:44px;font-size:22px}}
+.tb{background:var(--card);border:0;border-radius:20px;box-shadow:0 8px 20px -14px rgb(60 40 20/.4),0 1px 2px rgb(60 40 20/.06);font-variant-numeric:lining-nums}
+.tb.occ{box-shadow:inset 0 0 0 2px var(--gold),0 8px 20px -14px rgb(60 40 20/.4)}
+.tb.rdy{box-shadow:inset 0 0 0 2px var(--ok),0 8px 20px -14px rgb(60 40 20/.4)}
+.tb.sel{box-shadow:inset 0 0 0 2px var(--btn),var(--focus)}
+.chip{background:var(--card);border:0;box-shadow:0 4px 12px -8px rgb(60 40 20/.4)}
+.bt:not(.o):not(.g){background:var(--btn);color:var(--btnx);box-shadow:0 8px 18px -10px rgb(0 0 0/.55)}
+.bt.o{border-color:var(--tx)}
+.qty button{color:var(--tx);border-color:var(--tx)}
+.qty button:last-child{background:var(--btn);color:var(--btnx);border-color:var(--btn)}
+.sum{background:color-mix(in srgb,var(--card) 94%,transparent);border-color:var(--bd)}
+#toast{background:var(--btn);color:var(--btnx)}
+.meter i{background:var(--ok)}
 </style></head><body>
 <header><h1>MyMenu</h1><nav id="nav" aria-label="Sezioni"></nav></header>
 <div class="demo" role="note"><b>Versione dimostrativa.</b> I dati restano solo su questo dispositivo: l'ordine fatto dal cliente non arriva agli altri dispositivi (tablet, cucina, cameriere).</div>
 <main id="app"></main><div id="toast" role="status" aria-live="polite"></div>
 <script>
 const CATS=["Antipasti","Primi","Secondi","Dolci","Bevande","Vini"];
+const ICO={Antipasti:"🥓",Primi:"🍝",Secondi:"🥩",Dolci:"🍰",Bevande:"🥤",Vini:"🍷"},ph=m=>`<span class="ph" aria-hidden="true">${ICO[m.c]||"🍽"}</span>`;
 const MENU=[
 {id:1,n:"Tagliere di salumi",c:"Antipasti",p:12,t:6},{id:2,n:"Bruschette miste",c:"Antipasti",p:8,t:5},
 {id:3,n:"Tagliatelle al ragù",c:"Primi",p:13,t:12},{id:4,n:"Tortellini in brodo",c:"Primi",p:14,t:10},{id:5,n:"Risotto ai funghi",c:"Primi",p:14,t:18},
@@ -123,7 +153,7 @@ function go(k,tb){const l=items(k);if(!l.length)return toast("Ordine vuoto");con
 function free(tb){S.orders=S.orders.filter(o=>o.tb!=tb);save();render()}
 function stk(id,d){S.stock[id]=Math.max(0,S.stock[id]+d);save();render()}
 function menuHTML(k){let h=`<div class="chips">${CATS.map(c=>`<button class="chip" onclick="document.getElementById('${k}-${c}').scrollIntoView({behavior:'smooth'})">${c}</button>`).join("")}</div>`;for(const c of CATS){h+=`<h3 id="${k}-${c}">${c}</h3><div class="card">`;MENU.filter(m=>m.c==c&&!m.h).forEach(m=>{const q=C[k][m.id]||0,left=m.off?0:m.s?S.stock[m.id]-q:9;
- h+=`<div class="row"><div class="nm">${esc(m.n)}${m.sz?' <span class="pill k">stagione</span>':""}<small>${eur(m.p)} · ${m.off?"non disponibile oggi":m.s?(S.stock[m.id]<=0?"esaurito":"disponibili: "+S.stock[m.id]):m.t+" min"}</small></div><div class="qty"><button aria-label="Rimuovi ${esc(m.n)}" onclick="chg('${k}',${m.id},-1)" ${q?"":"disabled"}>−</button><b aria-live="polite">${q}</b><button aria-label="Aggiungi ${esc(m.n)}" onclick="chg('${k}',${m.id},1)" ${left<=0?"disabled":""}>+</button></div></div>`});h+="</div>"}return h}
+ h+=`<div class="row">${ph(m)}<div class="nm">${esc(m.n)}${m.sz?' <span class="pill k">stagione</span>':""}<small>${eur(m.p)} · ${m.off?"non disponibile oggi":m.s?(S.stock[m.id]<=0?"esaurito":"disponibili: "+S.stock[m.id]):m.t+" min"}</small></div><div class="qty"><button aria-label="Rimuovi ${esc(m.n)}" onclick="chg('${k}',${m.id},-1)" ${q?"":"disabled"}>−</button><b aria-live="polite">${q}</b><button aria-label="Aggiungi ${esc(m.n)}" onclick="chg('${k}',${m.id},1)" ${left<=0?"disabled":""}>+</button></div></div>`});h+="</div>"}return h}
 function sumHTML(k,tb){const l=items(k);if(!l.length)return"";return`<div class="sum bar"><div><b>${l.reduce((a,x)=>a+x[1],0)} voci · ${eur(tot(l))}</b><br><span class="pill w">⏱ attesa stimata ~${est(l)} min</span></div><button class="bt" onclick="go('${k}',${tb})">${k=="cliente"?"Invia ordine":"Invia in cucina"}</button></div>`}
 function lines(o){return o.items.map(x=>x[1]+"× "+esc(M(x[0]).n)).join(", ")}
 function vSala(){
@@ -141,7 +171,7 @@ function vCucina(){
  return`<div class="bar"><h2>Cucina</h2><div class="qty"><span>Cuochi</span><button onclick="S.cooks=Math.max(1,S.cooks-1);save();render()">−</button><b>${S.cooks}</b><button onclick="S.cooks++;save();render()">+</button></div></div><p>Carico: <b>~${Math.round(load())} min</b> di attesa prima di una nuova comanda.</p><div class="cols">${col("nuovo","Nuove","Inizia")}${col("cooking","In preparazione","Pronto ✓")}</div>`}
 function vCantina(){
  const low=MENU.filter(m=>m.s&&!m.h&&S.stock[m.id]<=MIN[m.id]);
- return`<h2>Magazzino bevande e cantina</h2>`+(low.length?`<div class="card"><span class="pill r">⚠ Da riordinare</span><p>${low.map(m=>esc(m.n)+" ("+S.stock[m.id]+")").join(" · ")}</p></div>`:"")+`<div class="card">`+MENU.filter(m=>m.s&&!m.h).map(m=>{const s=S.stock[m.id];return`<div class="row"><div class="nm" style="flex:1">${esc(m.n)}<small>${s} pz · soglia minima ${MIN[m.id]}</small><div class="meter"><i class="${s<=MIN[m.id]?"low":""}" style="width:${Math.min(100,s/MAX[m.id]*100)}%"></i></div></div><div class="qty"><button aria-label="Scarica una unità di ${esc(m.n)}" onclick="stk(${m.id},-1)">−</button><button aria-label="Carica 6 unità di ${esc(m.n)}" onclick="stk(${m.id},6)">+6</button></div></div>`}).join("")+`</div><p class="note">Le scorte si scalano da sole a ogni ordine confermato. Con “+6” registri un carico di merce.</p>`}
+ return`<h2>Magazzino bevande e cantina</h2>`+(low.length?`<div class="card"><span class="pill r">⚠ Da riordinare</span><p>${low.map(m=>esc(m.n)+" ("+S.stock[m.id]+")").join(" · ")}</p></div>`:"")+`<div class="card">`+MENU.filter(m=>m.s&&!m.h).map(m=>{const s=S.stock[m.id];return`<div class="row">${ph(m)}<div class="nm" style="flex:1">${esc(m.n)}<small>${s} pz · soglia minima ${MIN[m.id]}</small><div class="meter"><i class="${s<=MIN[m.id]?"low":""}" style="width:${Math.min(100,s/MAX[m.id]*100)}%"></i></div></div><div class="qty"><button aria-label="Scarica una unità di ${esc(m.n)}" onclick="stk(${m.id},-1)">−</button><button aria-label="Carica 6 unità di ${esc(m.n)}" onclick="stk(${m.id},6)">+6</button></div></div>`}).join("")+`</div><p class="note">Le scorte si scalano da sole a ogni ordine confermato. Con “+6” registri un carico di merce.</p>`}
 function vCliente(){
  const os=S.orders.filter(o=>o.tb==CT&&o.src=="cliente");
  return`<h2>Menu digitale – Tavolo <select onchange="CT=+this.value;render()" style="font:inherit;padding:4px">${Array.from({length:NT},(_,i)=>`<option ${i+1==CT?"selected":""}>${i+1}</option>`).join("")}</select></h2><p class="note">Simulazione di ciò che il cliente vede scansionando il QR code sul tavolo.</p>`+
@@ -149,7 +179,7 @@ function vCliente(){
 function tg(id,f){const m=M(id);m[f]=m[f]?0:1;if(m[f])for(const k in C)delete C[k][id];save();render()}
 function addDish(){const g=i=>document.getElementById(i).value,n=g("fn").trim(),c=g("fc"),p=parseFloat(g("fp").replace(",",".")),s=c=="Bevande"||c=="Vini";if(!n||!(p>=0))return toast("Inserisci nome e prezzo");const id=S.nid++,m={id,n,c,p,t:s?0:(parseInt(g("ft"))||5),sz:g("fz")=="1"?1:0};if(s){m.s=1;S.stock[id]=Math.max(0,parseInt(g("fq"))||0)}MENU.push(m);save();toast("Aggiunto: "+n);render()}
 function vMenu(){
- const row=m=>`<div class="row"><div class="nm">${esc(m.n)}${m.sz?' <span class="pill k">stagione</span>':""}<small>${eur(m.p)} · ${m.s?"cantina: "+S.stock[m.id]:m.t+" min"}${m.off?" · finito oggi":""}</small></div><div class="acts">${m.h?`<button class="bt s" onclick="tg(${m.id},'h')">Rimetti in menu</button>`:`<button class="bt s ${m.off?"g":"o"}" onclick="tg(${m.id},'off')">${m.off?"Riattiva":"Finito"}</button><button class="bt s o" onclick="tg(${m.id},'h')">Togli</button>`}</div></div>`;
+ const row=m=>`<div class="row">${ph(m)}<div class="nm">${esc(m.n)}${m.sz?' <span class="pill k">stagione</span>':""}<small>${eur(m.p)} · ${m.s?"cantina: "+S.stock[m.id]:m.t+" min"}${m.off?" · finito oggi":""}</small></div><div class="acts">${m.h?`<button class="bt s" onclick="tg(${m.id},'h')">Rimetti in menu</button>`:`<button class="bt s ${m.off?"g":"o"}" onclick="tg(${m.id},'off')">${m.off?"Riattiva":"Finito"}</button><button class="bt s o" onclick="tg(${m.id},'h')">Togli</button>`}</div></div>`;
  const hid=MENU.filter(m=>m.h);
  return`<h2>Gestione menu</h2><p class="note">Sala e cucina decidono qui cosa è in carta. <b>Finito</b> blocca subito gli ordini (anche quelli dei clienti) fino alla riattivazione; <b>Togli</b> nasconde il piatto dal menu, ad esempio a fine stagione, senza perdere lo storico.</p><h3>Aggiungi un piatto o un vino</h3><div class="card f"><input id="fn" aria-label="Nome" placeholder="Nome del piatto o del vino" autocomplete="off"><div class="f3"><select id="fc" aria-label="Categoria">${CATS.map(c=>`<option>${c}</option>`).join("")}</select><select id="fz" aria-label="Stagionalità"><option value="0">Sempre in menu</option><option value="1">Piatto di stagione</option></select></div><div class="f3"><input id="fp" aria-label="Prezzo" inputmode="decimal" placeholder="Prezzo €"><input id="ft" aria-label="Minuti in cucina" inputmode="numeric" placeholder="Minuti in cucina"><input id="fq" aria-label="Scorta" inputmode="numeric" placeholder="Scorta (bevande, vini)"></div><button class="bt" onclick="addDish()">Aggiungi al menu</button></div>`+CATS.map(c=>{const l=MENU.filter(m=>m.c==c&&!m.h);return l.length?`<h3>${c}</h3><div class="card">${l.map(row).join("")}</div>`:""}).join("")+(hid.length?`<h3>Fuori menu</h3><div class="card">${hid.map(row).join("")}</div>`:"")}
 function render(){const y=scrollY;
