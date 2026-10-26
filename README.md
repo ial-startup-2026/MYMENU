@@ -1,10 +1,10 @@
-# 🍷 TavoloFacile
+# 🍷 MyMenu
 
 App web per la gestione di un ristorante, pensata per **tablet e palmari**: meno lavoro per i camerieri, sala e cucina più coordinate, cantina sempre sotto controllo.
 
 Nessuna dipendenza e nessuna fase di build: è un unico file `index.html` (HTML, CSS e JavaScript).
 
-> **Versione dimostrativa.** Nel gruppo di lavoro il progetto si chiama *MyMenu* (è anche il nome del repository); il nome del prodotto, quello che si vede nel sito, è **TavoloFacile**.
+> **Versione dimostrativa.** Il nome del prodotto è **MyMenu**, lo stesso del repository. In una prima versione il sito si chiamava "TavoloFacile": se lo trovi in vecchie copie, è lo stesso progetto.
 
 ## Funzionalità
 
