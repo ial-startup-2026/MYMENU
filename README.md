@@ -4,6 +4,8 @@ App web per la gestione di un ristorante, pensata per **tablet e palmari**: meno
 
 Nessuna dipendenza e nessuna fase di build: è un unico file `index.html` (HTML, CSS e JavaScript).
 
+> **Versione dimostrativa.** Nel gruppo di lavoro il progetto si chiama *MyMenu* (è anche il nome del repository); il nome del prodotto, quello che si vede nel sito, è **TavoloFacile**.
+
 ## Funzionalità
 
 | Scheda | Cosa fa |
@@ -19,8 +21,8 @@ Nessuna dipendenza e nessuna fase di build: è un unico file `index.html` (HTML,
 ## Uso in locale
 
 ```bash
-git clone https://github.com/<tuo-utente>/tavolofacile.git
-cd tavolofacile
+git clone https://github.com/ilaria917/MYMENU.git
+cd MYMENU
 # apri index.html nel browser, oppure:
 python3 -m http.server 8000   # poi vai su http://localhost:8000
 ```
@@ -31,9 +33,12 @@ python3 -m http.server 8000   # poi vai su http://localhost:8000
 2. Vai su **Settings → Pages** e come *Source* scegli **GitHub Actions**.
 3. Ad ogni push su `main` il workflow `.github/workflows/pages.yml` pubblica il sito.
 
+> **Attenzione:** i termini di GitHub Pages non ammettono attività commerciali. Va bene per la demo di scuola; se un locale usa davvero l'app, conviene un'alternativa gratuita adatta all'uso commerciale (per esempio Cloudflare Pages).
+
 ## Dati e limiti attuali
 
 - I dati (ordini, scorte, menu) sono salvati nel `localStorage` del browser, chiave `tf1`. Restano sul dispositivo in cui si usa l'app.
+- La scheda **Cliente** è una simulazione: il telefono del cliente e il tablet del cameriere hanno ciascuno i propri dati e non si parlano. Per questo nel sito c'è l'avviso "Versione dimostrativa".
 - Non c'è login né ruoli: chiunque apra l'app può modificare il menu e le scorte.
 - Menu, prezzi e tempi sono d'esempio: si modificano nell'array `MENU` all'inizio dello script.
 
