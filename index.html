@@ -111,6 +111,7 @@ nav button.on{background:var(--btn);color:var(--btnx);box-shadow:none}
 #toast{background:var(--btn);color:var(--btnx)}
 .meter i{background:var(--ok)}
 nav:empty{display:none}
+.bt:disabled{opacity:.4;cursor:not-allowed;filter:none}
 .seg{display:flex;gap:4px;max-width:560px;width:calc(100% - 24px);margin:12px auto 0;padding:4px;background:var(--card);border-radius:999px;box-shadow:0 6px 18px -12px rgb(60 40 20/.35)}
 .seg button{flex:1;min-height:44px;border:0;border-radius:999px;background:transparent;color:var(--tx);font:600 15px Inter,system-ui,sans-serif;cursor:pointer}
 .seg button.on{background:var(--btn);color:var(--btnx)}
@@ -155,12 +156,13 @@ function send(tb,l,src){
  const o={id:S.seq++,tb,items:l,src,t:Date.now(),eta:est(l),st:src=="cliente"?"attesa":"nuovo"};
  if(o.st=="nuovo")take(o);S.orders.push(o);save()}
 function take(o){o.items.forEach(([id,q])=>{if(M(id).s)S.stock[id]-=q});if(!food(o.items).length)o.st="ready"}
-function adv(id){const o=S.orders.find(x=>x.id==id);o.st={nuovo:"cooking",cooking:"ready",ready:"served"}[o.st];save();render()}
+function adv(id){const o=S.orders.find(x=>x.id==id);if(!o||!["nuovo","cooking","ready"].includes(o.st))return;o.st={nuovo:"cooking",cooking:"ready",ready:"served"}[o.st];save();render()}
 function conf(id){const o=S.orders.find(x=>x.id==id);for(const[i,q]of o.items)if(M(i).s&&S.stock[i]<q)return toast("Scorta insufficiente: "+M(i).n);take(o);o.st=o.st=="ready"?"ready":"nuovo";o.eta=est(o.items);o.t=Date.now();save();render()}
 function rej(id){S.orders=S.orders.filter(x=>x.id!=id);save();render()}
 function chg(k,id,d){const q=(C[k][id]||0)+d;C[k][id]=Math.max(0,q);render()}
 function go(k,tb){const l=items(k);if(!l.length)return toast("Ordine vuoto");const n=S.orders.length;send(tb,l,k=="cliente"?"cliente":"cameriere");if(S.orders.length>n){C[k]={};toast(k=="cliente"?"Ordine inviato! Il cameriere lo confermerà":"Inviato in cucina ✓")}render()}
-function free(tb){S.orders=S.orders.filter(o=>o.tb!=tb);save();render()}
+const busy=tb=>S.orders.filter(o=>o.tb==tb&&(o.st=="attesa"||o.st=="nuovo"||o.st=="cooking")).length;
+function free(tb){const b=busy(tb);if(b)return toast("Non si può chiudere: la cucina non ha ancora finito "+b+(b==1?" ordine":" ordini"));S.orders=S.orders.filter(o=>o.tb!=tb);save();render()}
 function stk(id,d){S.stock[id]=Math.max(0,S.stock[id]+d);save();render()}
 function menuHTML(k){let h=`<div class="chips">${CATS.map(c=>`<button class="chip" onclick="document.getElementById('${k}-${c}').scrollIntoView({behavior:'smooth'})">${c}</button>`).join("")}</div>`;for(const c of CATS){h+=`<h3 id="${k}-${c}">${c}</h3><div class="card">`;MENU.filter(m=>m.c==c&&!m.h).forEach(m=>{const q=C[k][m.id]||0,left=m.off?0:m.s?S.stock[m.id]-q:9;
  h+=`<div class="row">${ph(m)}<div class="nm">${esc(m.n)}${m.sz?' <span class="pill k">stagione</span>':""}<small>${eur(m.p)} · ${m.off?"non disponibile oggi":m.s?(S.stock[m.id]<=0?"esaurito":"disponibili: "+S.stock[m.id]):m.t+" min"}</small></div><div class="qty"><button aria-label="Rimuovi ${esc(m.n)}" onclick="chg('${k}',${m.id},-1)" ${q?"":"disabled"}>−</button><b aria-live="polite">${q}</b><button aria-label="Aggiungi ${esc(m.n)}" onclick="chg('${k}',${m.id},1)" ${left<=0?"disabled":""}>+</button></div></div>`});h+="</div>"}return h}
@@ -174,7 +176,7 @@ function vSala(){
  os.filter(o=>o.st=="attesa").forEach(o=>h+=`<div class="card"><span class="pill r">📱 Ordine dal cliente</span><p>${lines(o)}</p><button class="bt s g" onclick="conf(${o.id})">Conferma</button> <button class="bt s o" onclick="rej(${o.id})">Rifiuta</button></div>`);
  os.filter(o=>o.st=="ready").forEach(o=>h+=`<div class="card"><span class="pill k">Pronto da servire</span><p>${lines(o)}</p><button class="bt s g" onclick="adv(${o.id})">Servito ✓</button></div>`);
  os.filter(o=>o.st=="nuovo"||o.st=="cooking").forEach(o=>h+=`<div class="card"><span class="pill w">${ST[o.st]} · ~${Math.max(1,o.eta-mins(o.t))} min</span><p>${lines(o)}</p></div>`);
- if(os.length)h+=`<div class="card bar"><span>Conto parziale: <b>${eur(os.filter(o=>o.st!="attesa").reduce((a,o)=>a+tot(o.items),0))}</b></span><button class="bt s o" onclick="free(${T})">Libera tavolo</button></div>`;
+ if(os.length){const b=busy(T);h+=`<div class="card bar"><span>Conto parziale: <b>${eur(os.filter(o=>o.st!="attesa").reduce((a,o)=>a+tot(o.items),0))}</b></span><button class="bt s o" onclick="free(${T})" ${b?"disabled":""}>Libera tavolo</button></div>`+(b?`<p class="note">Il tavolo si può liberare solo quando la cucina ha segnato come pronti tutti gli ordini (ancora da finire: ${b}).</p>`:"")}
  return h+`<h2>Nuova comanda</h2>`+menuHTML("sala")+sumHTML("sala",T)+`</div></div>`}
 function vCucina(){
  const col=(s,t,btn)=>`<div><h2>${t}</h2>`+(S.orders.filter(o=>o.st==s).map(o=>`<div class="card"><div class="bar"><b>Tavolo ${o.tb}</b><span class="pill ${mins(o.t)>o.eta?"r":"w"}">${mins(o.t)} min / ~${o.eta}</span></div><p>${food(o.items).map(x=>x[1]+"× "+esc(M(x[0]).n)).join("<br>")}</p><button class="bt s g" onclick="adv(${o.id})">${btn}</button></div>`).join("")||`<p class="note">Nessuna comanda</p>`)+`</div>`;
