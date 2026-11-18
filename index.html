@@ -8,8 +8,8 @@
 <meta property="og:site_name" content="MyMenu">
 <meta property="og:title" content="MyMenu – Gestione ristorante">
 <meta property="og:description" content="Sala, cucina, cantina e menu digitale da QR code in un'unica app per tablet e telefono. Versione dimostrativa.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%237b1e30'/%3E%3Ctext x='32' y='47' font-size='40' text-anchor='middle' font-family='Georgia,serif' font-weight='700' fill='%23d8b878'%3EM%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%235a0e24'/%3E%3Ctext x='32' y='47' font-size='40' text-anchor='middle' font-family='Arial,sans-serif' font-weight='700' fill='%23f8e8d1'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600&display=swap">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f6f3ee;--card:#fff;--tx:#1f1b16;--mu:#7a7165;--ac:#b4462b;--acx:#fff;--ok:#2f7d4f;--wa:#c98a12;--bd:#e4ddd2;--mu:#675e52;--wa:#8a5d00;--r1:10px;--r2:14px;--s2:8px;--s3:12px;--font-d:Georgia,"Times New Roman",serif;--shadow:0 -4px 14px rgb(0 0 0/.12);--focus:0 0 0 3px color-mix(in srgb,var(--ac) 45%,transparent)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#181512;--card:#242019;--tx:#f1ebe2;--mu:#a1978a;--ac:#e0683f;--acx:#1a0e08;--ok:#52b378;--wa:#e0aa3a;--bd:#38322a}}
@@ -117,6 +117,39 @@ nav:empty{display:none}
 .seg button.on{background:var(--btn);color:var(--btnx)}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.stats .card{margin:0}
 .stat b{display:block;font:800 26px/1.1 var(--font-d);font-variant-numeric:lining-nums}.stat span{color:var(--mu);font-size:13px}
+/* stile "Sota": bordeaux, vino, rosa, crema, beige; caratteri tondi e pieni */
+:root{--bg:#f8e8d1;--card:#fff7ea;--tx:#3a0916;--mu:#7a5a52;--ac:#7e1832;--acx:#f8e8d1;--gold:#a33a52;--bd:#e7d5b7;--btn:#5a0e24;--btnx:#f8e8d1;--ok:#3f7a55;--wa:#8a5d00;--bad:#a33a52;--font-d:"Outfit",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a0611;--card:#40101f;--tx:#f8e8d1;--mu:#d2b8a6;--ac:#e08a9c;--acx:#2a0611;--gold:#e08a9c;--bd:#5c1f31;--btn:#f8e8d1;--btnx:#5a0e24;--ok:#7ec79a;--wa:#e6b655;--bad:#ff9db0}}
+body{font-family:Outfit,system-ui,sans-serif;background:var(--bg)}
+header{background:#5a0e24;border-bottom:0;box-shadow:0 10px 24px -16px rgb(58 9 22/.7);backdrop-filter:none;-webkit-backdrop-filter:none}
+h1{font:800 32px/1 Outfit,sans-serif;letter-spacing:-.02em;text-transform:none;color:#f8e8d1}
+h1::after{width:36px;height:4px;background:#a33a52;margin-top:8px}
+h1::before{content:"";display:inline-block;width:.5em;height:.72em;margin-right:.18em;border-radius:50%;background:#f8e8d1;transform:rotate(-30deg) scaleX(.62);vertical-align:-.02em;box-shadow:inset -.05em 0 0 #5a0e24}
+nav{background:rgb(248 232 209/.12);box-shadow:none;border-color:transparent}
+nav button{color:#f8e8d1;font-weight:500}
+nav button.on{background:#f8e8d1;color:#5a0e24;font-weight:700}
+nav button:hover:not(.on){background:rgb(248 232 209/.16)}
+h2{font:800 22px/1.2 Outfit,sans-serif;letter-spacing:.02em;border-left:4px solid var(--gold)}
+h3{font-family:Outfit,sans-serif;color:var(--ac);letter-spacing:.16em}
+.seg{background:var(--card);box-shadow:0 6px 18px -12px rgb(58 9 22/.45)}
+.seg button{font-family:Outfit,sans-serif;font-weight:600}
+.card,.tb,.chip{box-shadow:0 10px 26px -18px rgb(58 9 22/.55),0 1px 2px rgb(58 9 22/.08)}
+.tb{font-family:Outfit,sans-serif;font-weight:800}
+.tb small,.stat b,.stat span{font-family:Outfit,sans-serif}
+.tb.occ{box-shadow:inset 0 0 0 2px var(--gold),0 8px 20px -14px rgb(58 9 22/.5)}
+.tb.sel{box-shadow:inset 0 0 0 2px var(--btn),var(--focus)}
+.ph{background:var(--bg);box-shadow:inset 0 0 0 5px color-mix(in srgb,var(--bd) 80%,#fff),0 5px 12px -6px rgb(58 9 22/.45)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ph{background:#5a0e24;box-shadow:inset 0 0 0 5px #7e1832,0 5px 12px -6px rgb(0 0 0/.6)}}
+.bt:not(.o):not(.g){background:var(--btn);color:var(--btnx);box-shadow:0 8px 18px -10px rgb(58 9 22/.7)}
+.bt.g{background:var(--ok);color:#fff}
+.bt.o{border-color:var(--btn);color:var(--btn)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bt.o{border-color:var(--tx);color:var(--tx)}}
+.qty button{border-color:var(--btn);color:var(--btn)}
+.qty button:last-child{background:var(--btn);color:var(--btnx)}
+.sum{border-color:var(--gold);background:color-mix(in srgb,var(--card) 94%,transparent)}
+#toast{background:#5a0e24;color:#f8e8d1}
+.meter i.low{background:var(--gold)}
+.demo{background:color-mix(in srgb,var(--gold) 10%,var(--card));border-color:var(--gold)}
 </style></head><body>
 <header><h1>MyMenu</h1><nav id="nav" aria-label="Sezioni"></nav></header>
 <div id="mode" class="seg" role="group" aria-label="Scegli la vista"></div>
